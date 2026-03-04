@@ -110,7 +110,8 @@ function App() {
             onClick={toggleRecording}
             style={isRecording ? { background: 'var(--danger)' } : {}}
           >
-            <Mic size={18} /> {isRecording ? 'Stop Mic' : 'Trascrivi Mic'}
+            {isRecording ? <span className="recording-dot"></span> : <Mic size={18} />}
+            {isRecording ? 'Stop Mic' : 'Trascrivi Mic'}
           </button>
 
           <button className={`btn ${isRecording ? 'btn-primary' : ''}`} onClick={toggleScreenAudio}>
