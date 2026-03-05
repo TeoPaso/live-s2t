@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
-import { Mic, ScreenShare, Eye, ZoomIn, ZoomOut, Save, ArrowUpFromLine } from 'lucide-react'
+import { Mic, ScreenShare, Eye, ZoomIn, ZoomOut, Save, ArrowUpFromLine, Download, FileText, Type } from 'lucide-react'
 import { useGeminiLive } from './useGeminiLive'
 import { useKeyInsights } from './useKeyInsights'
+import { exportToTxt, exportToDocx, exportToPdf } from './exportUtils'
 import './index.css'
 
 type ViewMode = 'top-text' | 'teleprompter'
@@ -22,6 +23,7 @@ function App() {
   const [hasApiKey, setHasApiKey] = useState<boolean>(true)
   const [viewMode, setViewMode] = useState<ViewMode>('top-text')
   const [fontSize, setFontSize] = useState<number>(36)
+  const [showExportMenu, setShowExportMenu] = useState(false)
 
   const [transcript, setTranscript] = useState<string>('')
   const transcriptAreaRef = useRef<HTMLDivElement>(null)
@@ -138,9 +140,30 @@ function App() {
             {viewMode === 'top-text' ? <Eye size={20} /> : <ArrowUpFromLine size={20} />}
           </button>
 
-          <button className="btn-icon" title="Archivio Registrazioni">
-            <Save size={20} />
-          </button>
+          <div className="export-container">
+            <button
+              className={`btn-icon ${showExportMenu ? 'active' : ''}`}
+              title="Esporta Trascrizione"
+              onClick={() => setShowExportMenu(!showExportMenu)}
+              disabled={!transcript}
+            >
+              <Download size={20} />
+            </button>
+
+            {showExportMenu && (
+              <div className="export-dropdown">
+                <button onClick={() => { exportToTxt(transcript); setShowExportMenu(false); }}>
+                  <Type size={16} /> Testo (.txt)
+                </button>
+                <button onClick={() => { exportToDocx(transcript); setShowExportMenu(false); }}>
+                  <FileText size={16} /> Word (.docx)
+                </button>
+                <button onClick={() => { exportToPdf(transcript); setShowExportMenu(false); }}>
+                  <Save size={16} /> PDF (.pdf)
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
