@@ -117,7 +117,7 @@ function App() {
         <div className="flex-row">
           <div className="logo-container">
             <span className="logo-text">Live S2T</span>
-            <Mic size={14} className="logo-sub-icon" />
+            <img src="/mic-logo.png" alt="Custom Microphone" className="custom-mic-logo" />
           </div>
         </div>
 

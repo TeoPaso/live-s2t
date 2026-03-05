@@ -167,7 +167,7 @@ button {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding: 1rem 2rem 12rem;
+  padding: 6rem 2rem 12rem;
   scroll-behavior: smooth;
   align-items: center;
 }
@@ -198,7 +198,7 @@ button {
   height: 32vh;
   justify-content: flex-start;
   overflow-y: auto;
-  padding-top: 5rem;
+  padding-top: 6rem;
   padding-bottom: 0;
 }
 
@@ -305,7 +305,6 @@ button {
   animation: insightIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   transition: all 0.2s ease;
-  white-space: nowrap;
 }
 
 .insight-card:hover {
@@ -344,10 +343,6 @@ button {
 
 .insight-text {
   line-height: 1.2;
-  white-space: nowrap;
-  max-width: 300px;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .insight-number {
@@ -497,10 +492,26 @@ button {
   -webkit-text-fill-color: transparent;
 }
 
-.logo-sub-icon {
-  margin-top: 2px;
-  color: var(--accent);
-  opacity: 0.8;
+.custom-mic-logo {
+  height: 26px;
+  width: auto;
+  margin-top: 4px;
+  mix-blend-mode: screen;
+  /* hides the solid black background from the AI image */
+  filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.4));
+  animation: floatMic 4s ease-in-out infinite;
+}
+
+@keyframes floatMic {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
 }
 
 /* ========= BOTTOM ACTIONS ========= */
