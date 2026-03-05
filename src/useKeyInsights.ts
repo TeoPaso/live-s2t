@@ -84,8 +84,8 @@ ${currentText.slice(-1000)}
                                 type: (['key_point', 'data', 'concept'].includes(item.type) ? item.type : 'key_point') as any,
                                 emoji: TYPE_EMOJI[item.type] || TYPE_EMOJI.key_point,
                             };
-                            // Show only last 3 picks for maximum impact
-                            return [...prev.slice(-2), newPick];
+                            // Always show only the latest pick — it replaces the previous
+                            return [newPick];
                         });
                     }
                 }

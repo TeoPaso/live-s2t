@@ -187,31 +187,21 @@ function App() {
         </div>
       </main>
 
-      {/* Key Insights Panel — center-bottom portion */}
-      {viewMode === 'top-text' && (
-        <section className={`insights-panel ${insights.length > 0 ? 'has-content' : ''}`}>
-          {insights.length > 0 && (
-            <>
-              <div className="insights-label">
-                <span className="insights-label-bar" />
-                Punti chiave
-              </div>
-              <div className="insights-list">
-                {insights.map((insight, i) => (
-                  <div
-                    key={insight.id}
-                    className={`insight-card insight-${insight.type}`}
-                    style={{ animationDelay: `${i * 0.1}s` }}
-                  >
-                    <span className="insight-emoji">{insight.emoji}</span>
-                    <span className="insight-text">{renderInsightText(insight.text)}</span>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-        </section>
-      )}
+      {/* Key Insights Panel — shows 1 pick at a time, replaces on update */}
+      {viewMode === 'top-text' && insights.length > 0 && (() => {
+        const insight = insights[0]
+        return (
+          <section className="insights-panel">
+            <div
+              key={insight.id}
+              className={`insight-card insight-${insight.type}`}
+            >
+              <span className="insight-emoji">{insight.emoji}</span>
+              <span className="insight-text">{renderInsightText(insight.text)}</span>
+            </div>
+          </section>
+        )
+      })()}
 
       {/* Bottom Actions — Recording controls moved here */}
       <footer className="bottom-actions">
