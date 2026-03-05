@@ -189,7 +189,7 @@ button {
   font-weight: 500;
   transition: font-size 0.2s ease, opacity 0.3s ease;
   line-height: 1.4;
-  text-align: left;
+  text-align: center;
 }
 
 /* ========= TOP-TEXT MODE ========= */
