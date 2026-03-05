@@ -101,24 +101,13 @@ function App() {
   return (
     <div className={`app-container mode-${viewMode}`}>
 
-      {/* Header Controls */}
+      {/* Header — Logo and Secondary Controls */}
       <header className="controls-header">
         <div className="flex-row">
-          <span className="logo-text">Live S2T</span>
-          <div style={{ width: '2px', height: '24px', background: 'var(--border)', margin: '0 10px' }}></div>
-
-          <button
-            className={`btn ${isRecording ? 'btn-primary' : ''}`}
-            onClick={toggleRecording}
-            style={isRecording ? { background: 'var(--danger)' } : {}}
-          >
-            {isRecording ? <span className="recording-dot"></span> : <Mic size={18} />}
-            {isRecording ? 'Stop Mic' : 'Trascrivi Mic'}
-          </button>
-
-          <button className={`btn ${isRecording ? 'btn-primary' : ''}`} onClick={toggleScreenAudio}>
-            <ScreenShare size={18} /> Audio di Sistema
-          </button>
+          <div className="logo-container">
+            <span className="logo-text">Live S2T</span>
+            <Mic size={14} className="logo-sub-icon" />
+          </div>
         </div>
 
         <div className="flex-row">
@@ -175,7 +164,7 @@ function App() {
         >
           {transcript ? (
             transcript.split(' ').filter(w => w.length > 0).map((word, i) => (
-              <span key={`word-${i}-${word}`} className="word-box" style={{ animationDelay: `${(i % 10) * 0.05}s` }}>
+              <span key={`word-${i}-${word}`} className="word-box">
                 {word}
               </span>
             ))
@@ -187,27 +176,51 @@ function App() {
         </div>
       </main>
 
-      {/* Key Insights Panel — bottom portion, only in top-text mode */}
-      {viewMode === 'top-text' && insights.length > 0 && (
-        <section className="insights-panel">
-          <div className="insights-label">
-            <span className="insights-label-bar" />
-            Punti chiave
-          </div>
-          <div className="insights-list">
-            {insights.map((insight, i) => (
-              <div
-                key={insight.id}
-                className={`insight-card insight-${insight.type}`}
-                style={{ animationDelay: `${i * 0.1}s` }}
-              >
-                <span className="insight-emoji">{insight.emoji}</span>
-                <span className="insight-text">{renderBoldText(insight.text)}</span>
+      {/* Key Insights Panel — center-bottom portion */}
+      {viewMode === 'top-text' && (
+        <section className={`insights-panel ${insights.length > 0 ? 'has-content' : ''}`}>
+          {insights.length > 0 && (
+            <>
+              <div className="insights-label">
+                <span className="insights-label-bar" />
+                Punti chiave
               </div>
-            ))}
-          </div>
+              <div className="insights-list">
+                {insights.map((insight, i) => (
+                  <div
+                    key={insight.id}
+                    className={`insight-card insight-${insight.type}`}
+                    style={{ animationDelay: `${i * 0.1}s` }}
+                  >
+                    <span className="insight-emoji">{insight.emoji}</span>
+                    <span className="insight-text">{renderBoldText(insight.text)}</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </section>
       )}
+
+      {/* Bottom Actions — Recording controls moved here */}
+      <footer className="bottom-actions">
+        <div className="flex-row">
+          <button
+            className={`btn btn-main-action ${isRecording ? 'is-recording' : ''}`}
+            onClick={toggleRecording}
+          >
+            {isRecording ? <span className="recording-dot"></span> : <Mic size={20} />}
+            {isRecording ? 'Stop Mic' : 'Trascrivi Mic'}
+          </button>
+
+          <button
+            className={`btn btn-main-action ${isRecording ? 'active' : ''}`}
+            onClick={toggleScreenAudio}
+          >
+            <ScreenShare size={20} /> Audio di Sistema
+          </button>
+        </div>
+      </footer>
 
     </div>
   )
