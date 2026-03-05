@@ -195,10 +195,10 @@ button {
 /* ========= TOP-TEXT MODE ========= */
 .mode-top-text .transcriber-area {
   flex: none;
-  height: 38vh;
+  height: 32vh;
   justify-content: flex-start;
   overflow-y: auto;
-  padding-top: 0.5rem;
+  padding-top: 5rem;
   padding-bottom: 0;
 }
 
@@ -206,7 +206,7 @@ button {
 .mode-top-text::after {
   content: '';
   position: fixed;
-  top: 30vh;
+  top: 24vh;
   left: 0;
   right: 0;
   height: 8vh;
@@ -247,7 +247,7 @@ button {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  top: 42vh;
+  top: 36vh;
   bottom: 12vh;
   width: 92%;
   max-width: 800px;
