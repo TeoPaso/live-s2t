@@ -250,6 +250,7 @@ button {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 1.2rem;
   z-index: 20;
   pointer-events: none;
@@ -285,6 +286,7 @@ button {
 .insight-card {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.8rem;
   padding: 0.9rem 2rem;
   border-radius: 50px;

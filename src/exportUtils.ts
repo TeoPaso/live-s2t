@@ -1,5 +1,5 @@
 import { Document, Packer, Paragraph, TextRun } from 'docx';
-import html2pdf from 'html2pdf.js';
+import jsPDF from 'jspdf';
 
 export const exportToTxt = (text: string) => {
     const element = document.createElement('a');
@@ -54,23 +54,46 @@ export const exportToDocx = async (text: string) => {
 };
 
 export const exportToPdf = (text: string) => {
-    const element = document.createElement('div');
-    element.style.padding = '40px';
-    element.style.color = '#000';
-    element.style.fontFamily = 'Arial, sans-serif';
-    element.innerHTML = `
-    <h1 style="margin-bottom: 20px;">Live S2T Transcript</h1>
-    <p style="color: #666; margin-bottom: 30px;">Generated on: ${new Date().toLocaleString()}</p>
-    <div style="line-height: 1.6; white-space: pre-wrap;">${text}</div>
-  `;
+    const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'pt',
+        format: 'a4'
+    });
 
-    const opt = {
-        margin: 1,
-        filename: `transcript-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.pdf`,
-        image: { type: 'jpeg' as const, quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' as const }
-    };
+    const margin = 40;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const maxLineWidth = pageWidth - margin * 2;
 
-    html2pdf().set(opt).from(element).save();
+    // Title
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Live S2T Transcript', margin, margin + 20);
+
+    // Date
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Generated on: ${new Date().toLocaleString()}`, margin, margin + 45);
+
+    // Body Text
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+
+    // Split long text into manageable lines using built-in method
+    const lines = doc.splitTextToSize(text, maxLineWidth);
+
+    let y = margin + 80;
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const lineHeight = 16;
+
+    for (let i = 0; i < lines.length; i++) {
+        if (y + lineHeight > pageHeight - margin) {
+            doc.addPage();
+            y = margin + 20; // Extra padding top on new page
+        }
+        doc.text(lines[i], margin, y);
+        y += lineHeight;
+    }
+
+    doc.save(`transcript-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.pdf`);
 };
