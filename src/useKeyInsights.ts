@@ -41,16 +41,17 @@ export function useKeyInsights(transcript: string, apiKey: string): KeyInsight[]
                         contents: [{
                             parts: [{
                                 text:
-                                    `You are a real-time insight extractor. Analyze this live speech transcript and extract 3 to 5 key messages, data points, or main concepts.
+                                    `You are a real-time insight extractor. Analyze this live speech transcript and extract 3 to 5 high-impact "picks".
 Rules:
-- Each insight must be a short sentence (max 15 words)
-- Use **double asterisks** around the 1-2 most important words in each insight
-- Respond ONLY with a JSON array (no markdown fences, no explanation)
-- Format: [{"text": "I **maggiorenni** hanno diritto di **voto**", "type": "key_point"|"data"|"concept"}]
-- "key_point": main argument or claim
-- "data": number, statistic, factual reference
-- "concept": abstract idea or topic discussed
-- Write in the SAME LANGUAGE as the transcript
+- Each pick must be 1 to 4 words MAX
+- Content: extremely "straightforward", re-elaborated for maximum impact
+- Use **double asterisks** around the most important word(s)
+- Respond ONLY with a JSON array
+- Format: [{"text": "**Voto** maggiorenni", "type": "key_point"|"data"|"concept"}]
+- "key_point": main argument/claim
+- "data": number/statistic/fact
+- "concept": abstract idea/topic
+- SAME LANGUAGE as transcript
 
 Transcript:
 """

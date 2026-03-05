@@ -268,75 +268,77 @@ button {
 
 .insights-list {
   display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
 }
 
 .insight-card {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 0.9rem 1.3rem;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-left: 4px solid transparent;
-  font-family: var(--font-body);
-  font-size: 1.15rem;
-  font-weight: 400;
+  gap: 0.6rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 500;
   color: var(--text-primary);
   pointer-events: auto;
   opacity: 0;
-  animation: insightIn 0.45s ease forwards;
-  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  animation: insightIn 0.4s ease forwards;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .insight-card:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.15);
-  transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05) translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .insight-key_point {
-  border-left-color: #3b82f6;
+  border-bottom: 3px solid #3b82f6;
 }
 
 .insight-data {
-  border-left-color: #10b981;
+  border-bottom: 3px solid #10b981;
 }
 
 .insight-concept {
-  border-left-color: #a855f7;
+  border-bottom: 3px solid #a855f7;
 }
 
 .insight-key_point .insight-emoji {
-  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
 }
 
 .insight-data .insight-emoji {
-  filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.5));
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6));
 }
 
 .insight-concept .insight-emoji {
-  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.5));
+  filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.6));
 }
 
 .insight-emoji {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   flex-shrink: 0;
 }
 
 .insight-text {
-  line-height: 1.45;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .insight-text strong {
   font-weight: 800;
-  font-size: 1.3rem;
   color: #fff;
-  text-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
 }
 
 @keyframes insightIn {
