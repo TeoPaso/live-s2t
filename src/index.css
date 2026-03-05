@@ -331,6 +331,18 @@ button {
 .insight-text {
   line-height: 1.2;
   white-space: nowrap;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.insight-number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 4px;
+  text-shadow: 0 0 15px var(--accent);
+  vertical-align: middle;
 }
 
 .insight-text strong {

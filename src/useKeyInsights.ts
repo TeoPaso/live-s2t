@@ -41,21 +41,21 @@ export function useKeyInsights(transcript: string, apiKey: string): KeyInsight[]
                         contents: [{
                             parts: [{
                                 text:
-                                    `You are a real-time insight extractor. Analyze this live speech transcript and extract exactly ONE high-impact "pick" representing the latest relevant point.
+                                    `You are a real-time high-impact summary tool. Extract exactly ONE new "pick" (insight) from the transcript.
 Rules:
-- THE PICK MUST BE 1 TO 4 WORDS MAX.
-- Content: extremely "straightforward", re-elaborated for maximum impact.
-- Use **double asterisks** around the most important word(s).
-- Respond ONLY with a single JSON object.
-- Format: {"text": "**Voto** maggiorenni", "type": "key_point"|"data"|"concept"}
-- "key_point": main argument/claim
-- "data": number/statistic/fact
-- "concept": abstract idea/topic
-- SAME LANGUAGE as transcript.
+- 3 to 5 words MAX.
+- AVOID REPEATING recent points. Look for the NEWEST info.
+- If it contains a NUMBER, wrap it in # (e.g., #42# megabyte).
+- Use **double asterisks** for the core concept.
+- "type" MUST be one of: "key_point", "data", "concept".
+- Format: {"text": "Aumento del **#20%#**", "type": "data"}
+
+Recent insights history (DO NOT REPEAT):
+${insights.slice(-3).map(i => i.text).join(' | ')}
 
 Transcript:
 """
-${currentText}
+${currentText.slice(-1000)}
 """` }]
                         }],
                         generationConfig: { temperature: 0.2, maxOutputTokens: 400 }
@@ -71,15 +71,21 @@ ${currentText}
                 if (jsonMatch) {
                     const item = JSON.parse(jsonMatch[0]);
                     if (item && item.text) {
+                        const newText = String(item.text).trim();
                         setInsights(prev => {
+                            // Deduplicate: don't add if it's identical to the last one
+                            if (prev.length > 0 && prev[prev.length - 1].text === newText) {
+                                return prev;
+                            }
+
                             const newPick = {
                                 id: ++idRef.current,
-                                text: String(item.text).trim(),
-                                type: ['key_point', 'data', 'concept'].includes(item.type) ? item.type : 'key_point',
+                                text: newText,
+                                type: (['key_point', 'data', 'concept'].includes(item.type) ? item.type : 'key_point') as any,
                                 emoji: TYPE_EMOJI[item.type] || TYPE_EMOJI.key_point,
                             };
-                            // Keep only the last 4 picks to keep the screen clean
-                            return [...prev.slice(-3), newPick];
+                            // Show only last 3 picks for maximum impact
+                            return [...prev.slice(-2), newPick];
                         });
                     }
                 }

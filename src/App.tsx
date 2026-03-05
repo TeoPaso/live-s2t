@@ -7,14 +7,25 @@ import './index.css'
 
 type ViewMode = 'top-text' | 'teleprompter'
 
-/** Parse **bold** markers into JSX */
-function renderBoldText(text: string) {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g)
-  return parts.map((part, i) => {
+/** Parse **bold** markers into JSX and #numbers# into large spans */
+function renderInsightText(text: string) {
+  // First split by bold
+  const boldParts = text.split(/(\*\*[^*]+\*\*)/g)
+  return boldParts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={i}>{part.slice(2, -2)}</strong>
+      return <strong key={`b-${i}`}>{renderInsightTextInternal(part.slice(2, -2))}</strong>
     }
-    return <span key={i}>{part}</span>
+    return <span key={`s-${i}`}>{renderInsightTextInternal(part)}</span>
+  })
+}
+
+function renderInsightTextInternal(text: string) {
+  const numParts = text.split(/(#[^#]+#)/g)
+  return numParts.map((part, j) => {
+    if (part.startsWith('#') && part.endsWith('#')) {
+      return <span key={`n-${j}`} className="insight-number">{part.slice(1, -1)}</span>
+    }
+    return part
   })
 }
 
@@ -193,7 +204,7 @@ function App() {
                     style={{ animationDelay: `${i * 0.1}s` }}
                   >
                     <span className="insight-emoji">{insight.emoji}</span>
-                    <span className="insight-text">{renderBoldText(insight.text)}</span>
+                    <span className="insight-text">{renderInsightText(insight.text)}</span>
                   </div>
                 ))}
               </div>
