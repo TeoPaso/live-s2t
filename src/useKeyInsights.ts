@@ -24,8 +24,8 @@ export function useKeyInsights(transcript: string, apiKey: string): KeyInsight[]
 
     const analyze = useCallback(async () => {
         const currentText = transcriptRef.current;
-        if (!apiKey || !currentText || currentText.length < 50) return;
-        if (currentText.length - lastAnalyzedLenRef.current < 80) return;
+        if (!apiKey || !currentText || currentText.length < 30) return;
+        if (currentText.length - lastAnalyzedLenRef.current < 40) return;
         if (analyzingRef.current) return;
 
         analyzingRef.current = true;
@@ -41,17 +41,17 @@ export function useKeyInsights(transcript: string, apiKey: string): KeyInsight[]
                         contents: [{
                             parts: [{
                                 text:
-                                    `You are a real-time insight extractor. Analyze this live speech transcript and extract 3 to 5 high-impact "picks".
+                                    `You are a real-time insight extractor. Analyze this live speech transcript and extract exactly ONE high-impact "pick" representing the latest relevant point.
 Rules:
-- Each pick must be 1 to 4 words MAX
-- Content: extremely "straightforward", re-elaborated for maximum impact
-- Use **double asterisks** around the most important word(s)
-- Respond ONLY with a JSON array
-- Format: [{"text": "**Voto** maggiorenni", "type": "key_point"|"data"|"concept"}]
+- THE PICK MUST BE 1 TO 4 WORDS MAX.
+- Content: extremely "straightforward", re-elaborated for maximum impact.
+- Use **double asterisks** around the most important word(s).
+- Respond ONLY with a single JSON object.
+- Format: {"text": "**Voto** maggiorenni", "type": "key_point"|"data"|"concept"}
 - "key_point": main argument/claim
 - "data": number/statistic/fact
 - "concept": abstract idea/topic
-- SAME LANGUAGE as transcript
+- SAME LANGUAGE as transcript.
 
 Transcript:
 """
@@ -67,16 +67,20 @@ ${currentText}
             const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
             if (rawText) {
-                const jsonMatch = rawText.match(/\[[\s\S]*?\]/);
+                const jsonMatch = rawText.match(/\{[\s\S]*?\}/);
                 if (jsonMatch) {
-                    const parsed = JSON.parse(jsonMatch[0]);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        setInsights(parsed.slice(0, 5).map((item: any) => ({
-                            id: ++idRef.current,
-                            text: String(item.text || '').trim(),
-                            type: ['key_point', 'data', 'concept'].includes(item.type) ? item.type : 'key_point',
-                            emoji: TYPE_EMOJI[item.type] || TYPE_EMOJI.key_point,
-                        })));
+                    const item = JSON.parse(jsonMatch[0]);
+                    if (item && item.text) {
+                        setInsights(prev => {
+                            const newPick = {
+                                id: ++idRef.current,
+                                text: String(item.text).trim(),
+                                type: ['key_point', 'data', 'concept'].includes(item.type) ? item.type : 'key_point',
+                                emoji: TYPE_EMOJI[item.type] || TYPE_EMOJI.key_point,
+                            };
+                            // Keep only the last 4 picks to keep the screen clean
+                            return [...prev.slice(-3), newPick];
+                        });
                     }
                 }
             }
@@ -88,18 +92,18 @@ ${currentText}
         }
     }, [apiKey]);
 
-    // Periodic analysis every 15 seconds
+    // Periodic analysis every 5 seconds
     useEffect(() => {
         if (!apiKey) return;
-        const interval = setInterval(analyze, 15000);
+        const interval = setInterval(analyze, 5000);
         return () => clearInterval(interval);
     }, [apiKey, analyze]);
 
-    // Also trigger after 5s pause in speech with enough new text
+    // Also trigger after 3s pause in speech with enough new text
     useEffect(() => {
-        if (!transcript || transcript.length < 50) return;
-        if (transcript.length - lastAnalyzedLenRef.current < 80) return;
-        const timer = setTimeout(analyze, 5000);
+        if (!transcript || transcript.length < 30) return;
+        if (transcript.length - lastAnalyzedLenRef.current < 40) return;
+        const timer = setTimeout(analyze, 3000);
         return () => clearTimeout(timer);
     }, [transcript, analyze]);
 
